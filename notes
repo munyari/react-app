@@ -1,0 +1,71 @@
+With a given set of inputs, the output (how the component looks on the page) will always be
+the same.
+
+There are two ways to declare React components:
+(1) As ES6 classes (as above)
+(2) Using theReact.createClass()method
+An example of using an ES6 class:
+class HelloWorld extends React.Component {
+render() { return(<p>Hello, world!</p>) }
+}
+
+The same component written using thecreateClassfunction from theReactlibrary:
+const HelloWorld = React.createClass({
+render() { return(<p>Hello, world!</p>) }
+})
+At the time of writing, both types of declarations are in widespread use. The differences between
+them are minimal. We expose you to both declarations in this book.
+
+React.createElement('div', {className: 'ui items'},
+'Hello, friend! I am a basic React component.'
+)
+Which can be represented in JSX as:
+<div className='ui items'>
+Hello, friend! I am a basic React component.
+</div>
+
+In JSX, braces are a delimiter, signaling to JSX that what resides in-between the braces is a
+JavaScript expression. The other delimiter is using quotes for strings, like this:
+id='1'
+JSX attribute values must be delimited by either braces or quotes.
+If type is important and we want to pass in something like a Number or a null, use braces
+
+Array's sort method:
+On each iteration, the argumentsaandbare two subsequent elements in the array. Sorting
+depends on the return value of the function:
+1. If the return value is less than0,ashould come first (have a lower index).
+2. If the return value is greater than0,bshould come first.
+3. If the return value is equal to0, leave order ofaandbunchanged with respect to
+each other.
+
+Functions passed down through props are the canonical manner in which children communciate events with their parent components.
+
+In JavaScript, the specialthisvariable has a different binding depending on the context. For
+instance, insiderender()we say thatthisis “bound” to the component. Put another way,this
+“references” the component.
+For therender()function, React bindsthisto the component for us. React specifies a default
+set of special API methods.render()is one such method. As we’ll see at the end of the chapter,
+componentDidMount()is another. For each of these special React methods, React will bind thethis
+variable to the component automatically.
+So, any time we define our own custom component methods, we have to manually bindthis
+to the component ourselves. There’s a pattern that we use to do so.
+class MyReactComponent extends React.Component {
+constructor(props) {
+super(props); // always call this first
+// custom method bindings here
+this.someFunction = this.someFunction.bind(this);
+}
+}
+Binding inThe first thing we do inconstructor()is callsuper(props). TheReact.Componentclass that
+ourProductclass is extending defines its ownconstructor(). By callingsuper(props), we’re
+invoking thatconstructor()function first.
+Importantly, theconstructor()function defined byReact.Componentwill bindthisinside our
+constructor()to the component. Because of this, it’s a good practice to always callsuper()first
+whenever you declare aconstructor()for your component.
+After callingsuper(), we callbind()on our custom component method:
+
+Every React component is rendered as a function of itsthis.propsandthis.state. This
+rendering is deterministic. This means that given a set of props and a set of state, a React component
+will always render a single way. As we mentioned at the beginning of the chapter, this approach
+makes for a powerful UI consistency guarantee.
+
