@@ -27,3 +27,16 @@ note that you don't have to use `this`
 
 What is the major advantage of using arrow function definitions?
 `this` is bound to the class automatically
+
+When you visit a website, assets are the files that your browser downloads and uses to display the page.
+
+The books suggested steps for building a react app from scratch?
+1. Break the app into components
+2. Build a static version of the app
+3. Determine what should be stateful
+4. Determine in which component each piece of state should live
+5. Hard-code initial states
+6. Add inverse data flow
+7. Add server communication
+
+The bottom level components in a component hierarchy are often known as leaf components
