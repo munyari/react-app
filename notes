@@ -40,3 +40,51 @@ The books suggested steps for building a react app from scratch?
 7. Add server communication
 
 The bottom level components in a component hierarchy are often known as leaf components
+
+Determining if data should be stateful:
+1. Is it passed in from a parent via props? If so, it probably isn’t state.
+2. Does it change over time? If not, it probably isn’t state.
+3. Can you compute it based on any other state or props in your component? If so, it’s not
+state.
+
+To determine where a piece of state should reside:
+• Identify every component that renders something based on that state.
+• Find a common owner component (a single component above all the components
+that need the state in the hierarchy).
+• Either the common owner or another component higher up in the hierarchy
+should own the state.
+• If you can’t find a component where it makes sense to own the state, create a new
+component simply for holding the state and add it somewhere in the hierarchy
+above the common owner component.
+pply this method to our application:
+
+Files that have .d. in their names are typescript type defintions
+
+You can use setInterval to execute a function on some interval
+  componentDidMount() {
+    this.forceUpdateInterval = setInterval(() => this.forceUpdate(), 50);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.forceUpdateInterval);
+  }
+
+setInterval returns a unique interval ID. You can pass the interval ID to
+clearInterval at any time to halt the interval.
+
+Curl's -X flag specifies the http method, -H the http header and -d the body of the request
+$ curl -X POST \
+-H 'Content-Type: application/json' \
+-d '{"start":1456468632194,"id":"a73c1d19-f32d-4aff-b470-cea4e792406a"}' \
+localhost:3000/api/timers/start
+
+You can pipe output from curl through jq to get pretty-formatted json
+You can also do some powerful manipulation of JSON, like iterating over all objects in the response
+and returning a particular field. In this example, we extract just theidproperty of every object in
+an array:
+curl -X GET localhost:3000/api/timers | jq '.[] | { id }'
+
+
+Question: does a good react component have only event handlers, lifecycle methods and a render?
+TODO: read about, and decide exactly when you should use functional set state
+read note 41 about Fetch, and 42 about promises
