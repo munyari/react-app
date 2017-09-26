@@ -84,7 +84,157 @@ and returning a particular field. In this example, we extract just theidproperty
 an array:
 curl -X GET localhost:3000/api/timers | jq '.[] | { id }'
 
+A `ReactElement` is a representation of DOM element in the Virtual DOM.
+
+We’ll walk throughin detail later in this section, so for now we’ll set this parameter to.
+Thechildrenof the DOM element must be aReactNodeobject, which is any of the following:
+1. `ReactElement`
+2. A string or a number (a `ReactText` object)
+3. An array of `ReactNode`s
+
+We can define comments inside of JSX by using the curly braces ({}) with comment delimiters (/*
+*/):
+let userLevel = 'admin';
+{/*
+Show the admin menu if the userLevel is 'admin'
+*/}
+{userLevel === 'admin' && <AdminMenu />}
+
+You must use the className attribute in JSX because class is a reserved keyword in javascript
+For the same reason we cannot use theclassattribute, we cannot apply theforattribute to a<label>
+element. Instead, we must use the attributehtmlFor. The property is a pass-through property in that
+it applies the attribute asfor:
+1<!-- ... -->
+2<label htmlFor='email'>Email</label>
+3<input name='email' type='email' />
+4<!-- ... -->
+
+Entities are reserved characters in HTML which include characters such as less-than<, greater-than
+>, the copyright symbol, etc. In order to display entities, we can just place the entity code in literal
+text.
+45
+1<ul>
+2<li>phone: &phone;</li>
+3<li>star: &star;</li>
+4</ul>
+
+If we want to apply our own attributes that the HTML spec does not cover, we have to prefix the
+attribute key with the string `data-`.
+1<div className='box' data-dismissible={true} />
+2<span data-highlight={true} />
+This requirements only applies to DOM components that are native to HTML and does not mean
+custom components cannot accept arbitrary keys as props. That is, we can accept any attribute on a
+custom component:
+1<Message dismissible={true} />
+2<Note highlight={true} />
+There are a standard set of web accessibility47attributes48and its a good idea to use them because
+there are many people who will have a hard time using our site without them. We can use any of
+these attribute on an element with the key prepended with the stringaria-. For instance, to set the
+hiddenattribute:
+1<div aria-hidden={true} />
+
+
+Any falsy value (false, undefined, null) will not be rendered in JSX
+
+WithgetChildContext()we can set the initial value of our context with the return value of the
+function. Back in ourMessagescomponent, we will set ouruserscontext object to the value of the
+this.props.usersgiven to the component.
+advanced-components/components-cookbook/src/components/Messages/Messages.js
+class Messages extends React.Component {
+// ...
+static childContextTypes = {
+users: PropTypes.array,
+userMap: PropTypes.object,
+};
+// ...
+getChildContext() {
+return {
+users: this.getUsers(),
+userMap: this.getUserMap(),
+};
+}
+// ...
+}
+Since thestateandpropsof a component can change, thecontextcan change as well. The
+getChildContext()method in the parent component gets called every time thestateorprops
+change on the parent component. If thecontextis updated, then the children will receive the updated
+context and will subsequently be re-rendered.
+
+In order to grab the context in a child
+component, we need to tell React we want access to it. We communicate this to React using the
+contextTypesdefinition in the child.
+The
+context data is set on the this.context object of the component withcontextTypesdefined.
+
+IfcontextTypesis defined on a component, then several of it’s lifecycle methods will get passed an
+additional argument ofnextContext:
+advanced-components/components-cookbook/src/components/Messages/ThreadList.js
+class ThreadList extends React.Component {
+// ...
+static contextTypes = {
+users: PropTypes.array,
+};
+// ...
+componentWillReceiveProps(nextProps, nextContext) {
+// ...
+}
+// ...
+shouldComponentUpdate(nextProps, nextState, nextContext) {
+// ...
+}
+// ...
+componentWillUpdate(nextProps, nextState, nextContext) {
+// ...
+}
+// ...
+componentDidUpdate(prevProps, prevState, prevContext) {
+// ...
+}
+In a functional stateless component,contextwill get passed as the second argument:
+const ChatHeader = (props, context) => {
+// ...
+};
+
+Any time a component needs to hold on
+to a dynamic piece of data, that component can be considered stateful.
+
+For now, know that it’s a good idea to have
+as few stateful components as possible. This is because state introduces complexity and makes
+composing components more difficult.
+
+Since thesetStatemethod triggers a refresh, we want to be careful about how often we
+call it.
+Modifying the actual-DOM is slow so we don’t want to cause a cascade ofsetStates to
+be called, as that could result it poor performance for our user.
+
+whenever a state update depends on the current state, it is preferable to pass a
+function tosetState(). # but why don't they do this in earlier chapters?
+
+If we have a component that has UI states which:
+1. cannot be “fetched” from outside or
+2. cannot be passed into the component,
+that’s usually a case for building state into the component.
+However, any data that can be passed in throughpropsor by other components is usually best to
+leave untouched. The only information we should ever put in state are values that are not computed
+and do not need to be sync’d across the app.
+
+One way that we can mitigate and minimize the complex states is by building our apps with a single
+stateful component composed of stateless components: components that do not keep state.
+
+Stateless Encourages Reuse
+Stateless components are a great way to create reusable components. Because stateless components
+need to have all of their configuration passed from the outside, we can often reuse stateless
+components in nearly any project, provided that we supply the right hooks.
+
+While we generally specifypropsourselves, React provides provides some specialpropsfor us. In
+our components, we can refer to child components in the tree usingthis.props.children.
+For instance, say we have acomponent that holds an:
 
 Question: does a good react component have only event handlers, lifecycle methods and a render?
 TODO: read about, and decide exactly when you should use functional set state
 read note 41 about Fetch, and 42 about promises
+https://facebook.github.io/react/docs/jsx-in-depth.html
+https://facebook.github.io/react/tips/if-else-in-JSX.html
+https://facebook.github.io/react/docs/glossary.html
+http://jbi.sh/what-is-virtual-dom/
+https://medium.com/@shopsifter/using-a-function-in-setstate-instead-of-an-object-1f5cfd6e55d1
