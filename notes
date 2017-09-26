@@ -230,6 +230,18 @@ While we generally specifypropsourselves, React provides provides some specialpr
 our components, we can refer to child components in the tree usingthis.props.children.
 For instance, say we have acomponent that holds an:
 
+What is wrong with this?
+this.setState({
+  counter: this.state.counter + this.props.increment,
+});
+this.state may be updated asynchronously, so you should not rely on its current value to calculate the next state.
+To fix it, use a second form of setState() that accepts a function rather than an object. That function will receive the previous state as the first argument, and the props at the time the update is applied as the second argument:
+
+// Correct
+this.setState((prevState, props) => ({
+  counter: prevState.counter + props.increment
+}));
+
 Question: does a good react component have only event handlers, lifecycle methods and a render?
 TODO: read about, and decide exactly when you should use functional set state
 read note 41 about Fetch, and 42 about promises
@@ -238,3 +250,4 @@ https://facebook.github.io/react/tips/if-else-in-JSX.html
 https://facebook.github.io/react/docs/glossary.html
 http://jbi.sh/what-is-virtual-dom/
 https://medium.com/@shopsifter/using-a-function-in-setstate-instead-of-an-object-1f5cfd6e55d1
+
