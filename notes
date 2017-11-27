@@ -1,51 +1,10 @@
 <--
  vim:ft=markdown
 -->
-How can you copy an array and push elements to its end?
-Array.concat()
-
-Remember: do **not** mutate state outside of this.setState
-
-Given a `product` object with a number property `votes`, how would you increment the value of `votes` without mutating `product`?
-Cleary, we must create a copy.
-```javascript
-Object.assign({}, product, {
-  votes: product.votes + 1,
-});
-```
-This will create a new Object, copy the properties of `product`, and then overwrite the `votes` property on the new object.
-
-How would you define the initial state for a component with the property intializer syntax?
-```javascript
-class ProductList extends React.Component {
-  state = {
-    products: [].
-  };
-}
-```
-note that you don't have to use `this`
-
-What is the major advantage of using arrow function definitions?
-`this` is bound to the class automatically
 
 When you visit a website, assets are the files that your browser downloads and uses to display the page.
 
-The books suggested steps for building a react app from scratch?
-1. Break the app into components
-2. Build a static version of the app
-3. Determine what should be stateful
-4. Determine in which component each piece of state should live
-5. Hard-code initial states
-6. Add inverse data flow
-7. Add server communication
-
 The bottom level components in a component hierarchy are often known as leaf components
-
-Determining if data should be stateful:
-1. Is it passed in from a parent via props? If so, it probably isn’t state.
-2. Does it change over time? If not, it probably isn’t state.
-3. Can you compute it based on any other state or props in your component? If so, it’s not
-state.
 
 To determine where a piece of state should reside:
 • Identify every component that renders something based on that state.
@@ -57,20 +16,6 @@ should own the state.
 component simply for holding the state and add it somewhere in the hierarchy
 above the common owner component.
 pply this method to our application:
-
-Files that have .d. in their names are typescript type defintions
-
-You can use setInterval to execute a function on some interval
-  componentDidMount() {
-    this.forceUpdateInterval = setInterval(() => this.forceUpdate(), 50);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.forceUpdateInterval);
-  }
-
-setInterval returns a unique interval ID. You can pass the interval ID to
-clearInterval at any time to halt the interval.
 
 Curl's -X flag specifies the http method, -H the http header and -d the body of the request
 $ curl -X POST \
@@ -84,39 +29,11 @@ and returning a particular field. In this example, we extract just theidproperty
 an array:
 curl -X GET localhost:3000/api/timers | jq '.[] | { id }'
 
-A `ReactElement` is a representation of DOM element in the Virtual DOM.
-
 We’ll walk throughin detail later in this section, so for now we’ll set this parameter to.
 Thechildrenof the DOM element must be aReactNodeobject, which is any of the following:
 1. `ReactElement`
 2. A string or a number (a `ReactText` object)
 3. An array of `ReactNode`s
-
-We can define comments inside of JSX by using the curly braces ({}) with comment delimiters (/*
-*/):
-let userLevel = 'admin';
-{/*
-Show the admin menu if the userLevel is 'admin'
-*/}
-{userLevel === 'admin' && <AdminMenu />}
-
-You must use the className attribute in JSX because class is a reserved keyword in javascript
-For the same reason we cannot use theclassattribute, we cannot apply theforattribute to a<label>
-element. Instead, we must use the attributehtmlFor. The property is a pass-through property in that
-it applies the attribute asfor:
-1<!-- ... -->
-2<label htmlFor='email'>Email</label>
-3<input name='email' type='email' />
-4<!-- ... -->
-
-Entities are reserved characters in HTML which include characters such as less-than<, greater-than
->, the copyright symbol, etc. In order to display entities, we can just place the entity code in literal
-text.
-45
-1<ul>
-2<li>phone: &phone;</li>
-3<li>star: &star;</li>
-4</ul>
 
 If we want to apply our own attributes that the HTML spec does not cover, we have to prefix the
 attribute key with the string `data-`.
@@ -132,9 +49,6 @@ there are many people who will have a hard time using our site without them. We 
 these attribute on an element with the key prepended with the stringaria-. For instance, to set the
 hiddenattribute:
 1<div aria-hidden={true} />
-
-
-Any falsy value (false, undefined, null) will not be rendered in JSX
 
 WithgetChildContext()we can set the initial value of our context with the return value of the
 function. Back in ourMessagescomponent, we will set ouruserscontext object to the value of the
@@ -195,21 +109,6 @@ const ChatHeader = (props, context) => {
 // ...
 };
 
-Any time a component needs to hold on
-to a dynamic piece of data, that component can be considered stateful.
-
-For now, know that it’s a good idea to have
-as few stateful components as possible. This is because state introduces complexity and makes
-composing components more difficult.
-
-Since thesetStatemethod triggers a refresh, we want to be careful about how often we
-call it.
-Modifying the actual-DOM is slow so we don’t want to cause a cascade ofsetStates to
-be called, as that could result it poor performance for our user.
-
-whenever a state update depends on the current state, it is preferable to pass a
-function tosetState(). # but why don't they do this in earlier chapters?
-
 If we have a component that has UI states which:
 1. cannot be “fetched” from outside or
 2. cannot be passed into the component,
@@ -226,28 +125,53 @@ Stateless components are a great way to create reusable components. Because stat
 need to have all of their configuration passed from the outside, we can often reuse stateless
 components in nearly any project, provided that we supply the right hooks.
 
-While we generally specifypropsourselves, React provides provides some specialpropsfor us. In
-our components, we can refer to child components in the tree usingthis.props.children.
-For instance, say we have acomponent that holds an:
+In the previous example, our text field is what we would call an “uncontrolled component”. This is another way of saying that React does not “control” how it is rendered – specifically its value. In other words, React is hands-off, and allows it to be freely influenced by user interaction.
 
-What is wrong with this?
-this.setState({
-  counter: this.state.counter + this.props.increment,
-});
-this.state may be updated asynchronously, so you should not rely on its current value to calculate the next state.
-To fix it, use a second form of setState() that accepts a function rather than an object. That function will receive the previous state as the first argument, and the props at the time the update is applied as the second argument:
+By directly tying our view to our application state we get certain features for very little work. For example, imagine a long form where the user must answer many questions by filling out lots of input fields. If the user is halfway through and accidentally reloads the page that would ordinarily clear out all the fields. If these were controlled components and our application state was persisted to localStorage, we would be able to come back exactly where they left off. Later, we’ll get to another important feature that controlled components pave the way for: validation.
 
-// Correct
-this.setState((prevState, props) => ({
-  counter: prevState.counter + props.increment
-}));
+```javascript.jsx
+function* count() {
+  yield x
+}
+for (var x of count()) {
+  console.log(x)
+}
+```
+will lazily generate a stream of all the integers. The yield keyword will pause
+function execution and resume when it is called again. This lets you write
+```
+function* take(list, n) {
+  var i = 0
+  for var x of list) {
+    if (n === i++) {
+        return
+      }
+      yield x
+  }
+}
 
-Question: does a good react component have only event handlers, lifecycle methods and a render?
-TODO: read about, and decide exactly when you should use functional set state
+for (var x of take(count(), 5)) {
+  console.log(x)
+}
+```
+
+`.done` lets you extract the value of a promise. `.then` transforms a promise into a new promise
+
+Actions in Redux are objects. Actions always have a type property. Our increment actions will look like this:
+Our increment actions will look like this:
+{
+  type: 'INCREMENT',
+}
+And decrement actions like this:
+{
+  type: 'DECREMENT',
+}
+
 read note 41 about Fetch, and 42 about promises
 https://facebook.github.io/react/docs/jsx-in-depth.html
 https://facebook.github.io/react/tips/if-else-in-JSX.html
 https://facebook.github.io/react/docs/glossary.html
 http://jbi.sh/what-is-virtual-dom/
 https://medium.com/@shopsifter/using-a-function-in-setstate-instead-of-an-object-1f5cfd6e55d1
+https://facebook.github.io/react/docs/events.html
 
